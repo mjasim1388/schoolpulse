@@ -10,7 +10,19 @@ from streamlit_option_menu import option_menu
 
 from auth import authenticate
 from ui import _html, make_selectboxes_readonly
+import streamlit as st
 
+# TEMPORARY DIAGNOSTIC — remove after fixing deployment
+try:
+    from sqlalchemy import text
+    from db import engine
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+    st.success("DB connection OK")
+except Exception as e:
+    st.error(f"DB ERROR: {type(e).__name__}")
+    st.error(f"Message: {str(e)}")
+    st.stop()
 # ============================================================
 # PAGE CONFIG
 # ============================================================
