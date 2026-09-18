@@ -10,12 +10,19 @@ from streamlit_option_menu import option_menu
 
 from auth import authenticate
 from ui import _html, make_selectboxes_readonly
-import streamlit as st
 
 # TEMPORARY DIAGNOSTIC — remove after fixing deployment
 try:
     from sqlalchemy import text
-    from db import engine
+    from db import engine, DATABASE_URL
+
+    st.write(f"**URL length:** {len(DATABASE_URL)}")
+    st.write(f"**First 20 chars:** `{DATABASE_URL[:20]}`")
+    st.write(f"**Last 20 chars:** `{DATABASE_URL[-20:]}`")
+    st.write(f"**Contains newline:** `{chr(10) in DATABASE_URL}`")
+    st.write(f"**Contains space:** `{' ' in DATABASE_URL}`")
+    st.write(f"**Contains carriage return:** `{chr(13) in DATABASE_URL}`")
+
     with engine.connect() as conn:
         conn.execute(text("SELECT 1"))
     st.success("DB connection OK")
@@ -23,6 +30,8 @@ except Exception as e:
     st.error(f"DB ERROR: {type(e).__name__}")
     st.error(f"Message: {str(e)}")
     st.stop()
+
+
 # ============================================================
 # PAGE CONFIG
 # ============================================================
@@ -32,7 +41,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
 
 # ============================================================
 # LOAD DESIGN SYSTEM CSS
