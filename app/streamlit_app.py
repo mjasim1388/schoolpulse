@@ -11,32 +11,6 @@ from streamlit_option_menu import option_menu
 from auth import authenticate
 from ui import _html, make_selectboxes_readonly
 
-# TEMPORARY DIAGNOSTIC — remove after fixing deployment
-try:
-    from urllib.parse import urlparse
-    from sqlalchemy import text
-    from db import engine, DATABASE_URL
-
-    parsed = urlparse(DATABASE_URL)
-    pw = parsed.password or ""
-
-    st.write(f"**URL length:** {len(DATABASE_URL)}")
-    st.write(f"**Username:** `{parsed.username}`")
-    st.write(f"**Password length:** {len(pw)}")
-    st.write(f"**Password:** `{pw}`")
-    st.write(f"**Host:** `{parsed.hostname}`")
-    st.write(f"**Port:** `{parsed.port}`")
-    st.write(f"**Path:** `{parsed.path}`")
-    st.write(f"**Query:** `{parsed.query}`")
-
-    with engine.connect() as conn:
-        conn.execute(text("SELECT 1"))
-    st.success("DB connection OK")
-except Exception as e:
-    st.error(f"DB ERROR: {type(e).__name__}")
-    st.error(f"Message: {str(e)}")
-    st.stop()
-
 
 # ============================================================
 # PAGE CONFIG
