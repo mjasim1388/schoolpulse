@@ -13,15 +13,21 @@ from ui import _html, make_selectboxes_readonly
 
 # TEMPORARY DIAGNOSTIC — remove after fixing deployment
 try:
+    from urllib.parse import urlparse
     from sqlalchemy import text
     from db import engine, DATABASE_URL
 
+    parsed = urlparse(DATABASE_URL)
+    pw = parsed.password or ""
+
     st.write(f"**URL length:** {len(DATABASE_URL)}")
-    st.write(f"**First 20 chars:** `{DATABASE_URL[:20]}`")
-    st.write(f"**Last 20 chars:** `{DATABASE_URL[-20:]}`")
-    st.write(f"**Contains newline:** `{chr(10) in DATABASE_URL}`")
-    st.write(f"**Contains space:** `{' ' in DATABASE_URL}`")
-    st.write(f"**Contains carriage return:** `{chr(13) in DATABASE_URL}`")
+    st.write(f"**Username:** `{parsed.username}`")
+    st.write(f"**Password length:** {len(pw)}")
+    st.write(f"**Password:** `{pw}`")
+    st.write(f"**Host:** `{parsed.hostname}`")
+    st.write(f"**Port:** `{parsed.port}`")
+    st.write(f"**Path:** `{parsed.path}`")
+    st.write(f"**Query:** `{parsed.query}`")
 
     with engine.connect() as conn:
         conn.execute(text("SELECT 1"))
